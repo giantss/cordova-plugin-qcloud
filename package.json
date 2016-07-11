@@ -1,7 +1,15 @@
 {
   "name": "cordova-plugin-qcloud",
   "version": "0.0.1",
-  "description": "Input your plugin's description!",
+  "description": "codrova/phonegap wrapper for qcloud sdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giantss/cordova-plugin-qcloud.git"
+  },
   "cordova": {
     "id": "cordova-plugin-qcloud",
     "platforms": [
@@ -9,13 +17,22 @@
       "ios"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "Replace by your own git URL！"
-  },
   "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
     "cordova",
-    "plugin"
+    "phonegap",
+    "plugin",
+    "qcloud",
+    "qq",
+    "Tencent",
+    "cloud"
   ],
-  "author": "youremail@email.com"
+  "author": "https://github.com/giantss",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/giantss/cordova-plugin-qcloud/issues"
+  },
+  "homepage": "https://github.com/giantss/cordova-plugin-qcloud"
 }
