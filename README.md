@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)](https://github.com/iVanPan/Cordova_QQ/blob/master/LICENSE)
 [![Contact](https://img.shields.io/badge/contact-Van-green.svg?style=flat)](http://VanPan.me)
 	
-这个一个QQ SDK的Cordova 插件。 [English](https://github.com/iVanPan/Cordova_QQ)				
+这个一个QQ SDK的Cordova 插件。 		
 如果你希望使用一个微博的cordova插件可以查看[这里](https://github.com/iVanPan/cordova_weibo).
 ##主要功能
 - QQ 登录
@@ -20,7 +20,7 @@
 - Cordova-iOS >=4.0
 
 ##安装
-1. 命令行运行      ```cordova plugin add https://github.com/iVanPan/Cordova_QQ.git --variable QQ_APP_ID=YOUR_QQ_APPID```  或者  ```cordova plugin add cordova-plugin-qqsdk --variable QQ_APP_ID=YOUR_QQ_APPID```              
+1. 命令行运行      ```cordova plugin add https://github.com/giantss/cordova-plugin-qcloud --variable QCLOUD_APP_ID=YOUR_QCLOUD_APP_ID```  或者  ```cordova plugin add cordova-plugin-qcloud --variable QCLOUD_APP_ID=YOUR_QCLOUD_APP_ID```              
 2. 命令行运行 cordova build --device     
  		
 ##注意事项					        	
