@@ -36,8 +36,8 @@ public class QCloud extends CordovaPlugin{
     private String srcFilePath    = null;  //视频文件的绝对路径
     private UploadManager mFileUploadManager = null;
 
-    private String signUrl = "http://203.195.194.28/php/getsignv2.php?bucket=baronjia&service=video";
-    private String oneSign = "http://203.195.194.28/php/getsignv2.php?bucket=baronjia&service=cos&expired=0&path=";
+    private String signUrl = "http://bbs.chinabike.net/phone/uploadvideo.php";
+    private String oneSign = "http://bbs.chinabike.net/phone/uploadvideo_once.php";
 
     private String result = null;
     private String bucket = null;
