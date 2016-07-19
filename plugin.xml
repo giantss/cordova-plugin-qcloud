@@ -36,7 +36,7 @@
        <preference name="QCLOUD_APP_ID" value="$QCLOUD_APP_ID" />
      </config-file>
 
-    <!--set ios URLTypes for QQ SDK -->
+    <!--set ios URLTypes for QCloud SDK -->
    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>
@@ -71,9 +71,10 @@
     <framework src="CoreTelephony.framework" />
     <framework src="SystemConfiguration.framework" />
     <framework src="libstdc++.6.dylib" />
-    <!--qcloud SDK version 2.9.3-->
-    <framework src="src/ios/TencentOpenAPI.framework" custom="true" framework="true"/>
-    <resource-file src="src/ios/TencentOpenApi_IOS_Bundle.bundle" />
+    <!--qcloud SDK version 1.3.4.1-->
+     <header-file src="src/ios/QcloudDemoApp/TXYBase.h" />
+     <header-file src="src/ios/QcloudDemoApp/TXYUploadManager.h" />
+     <source-file src="src/ios/QcloudDemoApp/libTXYUploader.a" framework="true" />
 
 
     <info>
