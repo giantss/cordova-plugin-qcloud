@@ -13,7 +13,7 @@
 - Cordova-iOS >=4.0
 
 ##安装
-1. 命令行运行      ```cordova plugin add https://github.com/giantss/cordova-plugin-qcloud --variable QCLOUD_APP_ID=YOUR_QCLOUD_APP_ID```  或者  ```cordova plugin add cordova-plugin-qcloud --variable QCLOUD_APP_ID=YOUR_QCLOUD_APP_ID```              
+1. 命令行运行      ```cordova plugin add https://github.com/giantss/cordova-plugin-qcloud --variable QCLOUD_APP_ID=YOUR_QCLOUD_APP_ID```  
 2. 命令行运行 cordova build --device     
  		
 ##注意事项					        	

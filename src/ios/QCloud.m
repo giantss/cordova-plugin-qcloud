@@ -96,7 +96,7 @@ NSString *QCLOUD_APP_ID = @"qcloud_app_id";
         TXYVideoFileInfo *videoFileInfo = [[TXYVideoFileInfo alloc]init];
         videoFileInfo.title = @"video2";
         videoFileInfo.desc = @"videodesc1";
-        videoFileInfo.coverUrl= @"http://baron-10000002.cos.myqcloud.com/me/2006420115622257.jpg";//视频的自定义封面
+        videoFileInfo.coverUrl= @"http://www.chinabike.net/uploadfile/2016/0719/20160719063757571.jpg";//视频的自定义封面
         
         
         

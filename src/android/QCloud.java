@@ -2,7 +2,6 @@ package org.bike.giantss;
 
 import android.app.ProgressDialog;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,6 +33,7 @@ public class QCloud extends CordovaPlugin{
     public  static  final String ERROR_PROXY_AUTH_INVOKE   = "调用签名服务失败";
     public  static  final String ERROR_PROXY_AUTH_FAILED    = "非法签名";
     public  static  final String ERROR_PROXY_AUTH_EXPIRED  = "签名过期";
+    public static final String ERROR_PROXY_SIGN_BUCKET_NOTMATCH  = "bucket与签名中的bucket不匹配";
     public static final String ERROR_UNKNOWN = "未知错误";
     private static final String TAG = "QCloud";
     private String APP_ID;
@@ -103,24 +103,18 @@ public class QCloud extends CordovaPlugin{
             return true;
         }
         srcFilePath    = params.getString("path");
-
-        if (TextUtils.isEmpty(srcFilePath   )) {
-            Toast.makeText(this.cordova.getActivity().getApplicationContext(), "请先选择文件", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
         VideoAttr videoAttr = new VideoAttr();
         videoAttr.isCheck = false;
-        videoAttr.title = "red-1";
-        videoAttr.desc = "cos-video-desc" + srcFilePath   ;
+        videoAttr.title = "video1";
+        videoAttr.desc = "cos-video-desc" + srcFilePath;
+        videoAttr.coverUrl = "http://www.chinabike.net/uploadfile/2016/0719/20160719063757571.jpg";
 
         String[] strarray = srcFilePath   .split("[/]");
         destFilePath   = strarray[strarray.length - 1];
-
+        m_pDialog.setMessage("上传进度: " + 0 + "%");
         m_pDialog.show();
         // 构建要上传的任务
-        //IUploadTaskListener iUploadTaskListener =
-        videoUploadTask = new VideoUploadTask(bucket, srcFilePath   , "/" + destFilePath  , "",videoAttr,true,new IUploadTaskListener() {
+        videoUploadTask = new VideoUploadTask(bucket, srcFilePath   , "/android/" + destFilePath  , "",videoAttr,true,new IUploadTaskListener() {
             @Override
             public void onUploadSucceed(final FileInfo result) {
                 //Toast.makeText(cordova.getActivity().getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
@@ -164,6 +158,9 @@ public class QCloud extends CordovaPlugin{
                     case -4018:
                         callbackContext.error(ERROR_SAME_FILE_UPLOAD);
                         break;
+                    case -61:
+                        callbackContext.error(ERROR_PROXY_SIGN_BUCKET_NOTMATCH);
+                        break;
                     case -96:
                         callbackContext.error(ERROR_PROXY_AUTH_EXPIRED);
                         break;
@@ -199,7 +196,7 @@ public class QCloud extends CordovaPlugin{
     // 查询视频
     public void queryImg() {
         ObjectStatTask filetask = null;
-        filetask = new ObjectStatTask(FileType.Video, bucket, "/VID_20160718_153409.mp4"
+        filetask = new ObjectStatTask(FileType.Video, bucket, "/android/"+ destFilePath
                 , Dentry.VIDEO, new ObjectStatTask.IListener() {
             @Override
             public void onSuccess(final ObjectStatTask.CmdTaskRsp result) {
