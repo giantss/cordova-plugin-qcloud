@@ -38,8 +38,6 @@ public class QCloud extends CordovaPlugin{
     private static final String TAG = "QCloud";
     private String APP_ID;
     private static final String QCLOUD_APP_ID = "qcloud_app_id";
-    private static int RESULT_LOAD_VIDEO = 2;
-
     private String destFilePath  ;  //远程相对路径
     private String srcFilePath    = null;  //视频文件的绝对路径
     private UploadManager mFileUploadManager = null;
@@ -55,13 +53,12 @@ public class QCloud extends CordovaPlugin{
     private ProgressDialog m_pDialog = null;
     private VideoUploadTask videoUploadTask = null;
     private Handler mMainHandler = new Handler();
+    private  boolean isUpload = true;
 
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
        APP_ID = webView.getPreferences().getString(QCLOUD_APP_ID, "");
-        // 去用户的业务务器获取签名
-        getUploadImageSign(signUrl);
         // 1，创建一个上传容器 需要1.appid 2.上传文件类型3.上传缓存（类型字符串，要全局唯一否则）
         bucket = "cbiphone";
         persistenceId = "chinabikeqcloudvideo";
@@ -185,10 +182,8 @@ public class QCloud extends CordovaPlugin{
                 });
             }
         });
-        Toast.makeText(cordova.getActivity().getApplicationContext(), sign, Toast.LENGTH_SHORT).show();
-        videoUploadTask.setAuth(sign);
-       Boolean r = mFileUploadManager.upload(videoUploadTask); // 开始上传
-        Toast.makeText(cordova.getActivity().getApplicationContext(), r.toString(), Toast.LENGTH_SHORT).show();
+        // 去用户的业务务器获取签名
+        getUploadImageSign(signUrl, videoUploadTask );
         return true;
     }
 
@@ -239,7 +234,7 @@ public class QCloud extends CordovaPlugin{
         mFileUploadManager.sendCommand(filetask);
     }
     // 获取app 的签名
-    private void getUploadImageSign(final String s) {
+    private void getUploadImageSign(final String s, final VideoUploadTask videoUploadTask ) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -257,6 +252,10 @@ public class QCloud extends CordovaPlugin{
                     }
                     JSONObject jsonData = new JSONObject(result);
                     sign = jsonData.getString("sign");
+                    Log.i(TAG,sign);
+                    videoUploadTask.setAuth(sign);
+                    isUpload = mFileUploadManager.upload(videoUploadTask); // 开始上传
+                    Log.i(TAG,String.valueOf(isUpload));
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
