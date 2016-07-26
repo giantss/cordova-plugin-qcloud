@@ -35,6 +35,7 @@ public class QCloud extends CordovaPlugin{
     public  static  final String ERROR_PROXY_AUTH_EXPIRED  = "签名过期";
     public static final String ERROR_PROXY_SIGN_BUCKET_NOTMATCH  = "bucket与签名中的bucket不匹配";
     public static final String ERROR_UNKNOWN = "未知错误";
+    public static final String ERROR_JSON_EXCEPTION = "JSON格式错误";
     private static final String TAG = "QCloud";
     private String APP_ID;
     private static final String QCLOUD_APP_ID = "qcloud_app_id";
@@ -44,6 +45,7 @@ public class QCloud extends CordovaPlugin{
 
     private String signUrl = "http://bbs.chinabike.net/phone/uploadvideo.php";
     private String oneSign = "http://bbs.chinabike.net/phone/uploadvideo_once.php";
+    private String CBURL = "http://bbs.chinabike.net/phone/video_encode.php?action=video_info&playurl=";
 
     private String result = null;
     private String bucket = null;
@@ -54,6 +56,11 @@ public class QCloud extends CordovaPlugin{
     private VideoUploadTask videoUploadTask = null;
     private Handler mMainHandler = new Handler();
     private  boolean isUpload = true;
+    private  String isEncodeSuccess = null;
+    private  String relativeSDPath = null;
+    private  String absoluteSDPath = null;
+
+    private  String fixedURL = "http://cbiphone-10047633.video.myqcloud.com";
 
     @Override
     protected void pluginInitialize() {
@@ -115,13 +122,19 @@ public class QCloud extends CordovaPlugin{
             @Override
             public void onUploadSucceed(final FileInfo result) {
                 //Toast.makeText(cordova.getActivity().getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                Log.i(TAG,String.valueOf(result));
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
-                        m_pDialog.hide();
+                        //m_pDialog.hide();
+                        m_pDialog.setMessage("视频处理中...");
                        String url = result.url;
-                        callbackContext.success(url);
+                        //callbackContext.success(url);
+                        relativeSDPath = "/10047633/cbiphone"+ url.substring(url.indexOf("/android"),url.length()) + ".f20.mp4";
+                        getEncodeState(CBURL+relativeSDPath, callbackContext);
+
+
                         //queryImg();
                     }
                 });
@@ -183,7 +196,7 @@ public class QCloud extends CordovaPlugin{
             }
         });
         // 去用户的业务务器获取签名
-        getUploadImageSign(signUrl, videoUploadTask );
+        getUploadImageSign(signUrl, videoUploadTask, callbackContext);
         return true;
     }
 
@@ -233,8 +246,45 @@ public class QCloud extends CordovaPlugin{
         filetask.setAuth(sign);
         mFileUploadManager.sendCommand(filetask);
     }
+
+    /**
+     * 转码回调
+     * @param path
+     * @param callbackContext
+     */
+    private void  getEncodeState(final String path, final CallbackContext callbackContext){
+        try {
+            URL url = new URL(path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url
+                    .openConnection();
+            InputStreamReader in = new InputStreamReader(urlConnection
+                    .getInputStream());
+            BufferedReader buffer = new BufferedReader(in);
+            String inpuLine = null;
+            while ((inpuLine = buffer.readLine()) != null) {
+                result = inpuLine + "\n";
+            }
+            JSONObject jsonData = new JSONObject(result);
+            isEncodeSuccess = jsonData.getString("success");
+            Log.i(TAG,isEncodeSuccess);
+            if(isEncodeSuccess.equals("1")){
+                m_pDialog.hide();
+                String cbUrl = jsonData.getString("playurl");
+                String cbCoverUrl = jsonData.getString("cover_url");
+                absoluteSDPath = fixedURL + cbUrl.substring(cbUrl.indexOf("/android"),cbUrl.length());
+                callbackContext.success(makeJson(absoluteSDPath, cbCoverUrl, callbackContext));
+
+            }else{
+                getEncodeState(CBURL+relativeSDPath,callbackContext);
+            }
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
     // 获取app 的签名
-    private void getUploadImageSign(final String s, final VideoUploadTask videoUploadTask ) {
+    private void getUploadImageSign(final String s, final VideoUploadTask videoUploadTask, final  CallbackContext callbackContext ) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -257,6 +307,7 @@ public class QCloud extends CordovaPlugin{
                     isUpload = mFileUploadManager.upload(videoUploadTask); // 开始上传
                     Log.i(TAG,String.valueOf(isUpload));
                 } catch (Exception e) {
+                    callbackContext.error(String.valueOf(e));
                     // TODO: handle exception
                 }
             }
@@ -266,21 +317,18 @@ public class QCloud extends CordovaPlugin{
     /**
      * 组装JSON
      *
-     * @param access_token
-     * @param userid
-     * @param expires_time
+     * @param absoluteSDPath
+     * @param cbCoverUrl
      * @return
      */
-    private JSONObject makeJson(String access_token, String userid, long expires_time) {
-        String json = "{\"access_token\": \"" + access_token + "\", " +
-                " \"userid\": \"" + userid + "\", " +
-                " \"expires_time\": \"" + String.valueOf(expires_time) + "\"" +
-                "}";
+    private JSONObject makeJson(String absoluteSDPath, String cbCoverUrl, final  CallbackContext callbackContext) {
+        String json = "{\"absoluteSDPath\": \"" + absoluteSDPath + "\", " + " \"cbCoverUrl\": \"" + cbCoverUrl + "\"}";
         JSONObject jo = null;
         try {
             jo = new JSONObject(json);
         } catch (JSONException e) {
             e.printStackTrace();
+            callbackContext.error(ERROR_JSON_EXCEPTION);
         }
         return jo;
     }
