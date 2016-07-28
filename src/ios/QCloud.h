@@ -5,6 +5,7 @@
 @interface QCloud : CDVPlugin
 
 @property (nonatomic,strong) NSMutableData *dataSign;
+@property (nonatomic,strong) NSMutableData *qcloudCBData;
 @property (nonatomic,copy) NSString *sign;
 @property (nonatomic,strong) TXYUploadManager *uploadVideoManager;
 @property (nonatomic,strong) TXYVideoUploadTaskRsp *photoResp;
@@ -17,6 +18,14 @@
 @property(nonatomic, copy) NSString *bucket;
 @property(nonatomic, copy) NSString *appId;
 @property(nonatomic, copy) NSString *persistenceId;
+@property(nonatomic, copy) NSString *relativeSDPath;
+@property(nonatomic, copy) NSString *absoluteSDPath;
+@property(nonatomic, copy) NSString *fixedURL;
+@property(nonatomic, copy) NSString *CBURL;
+@property (nonatomic, copy) NSString *reqType;
+@property (nonatomic, copy) NSString *playUrl;
+@property (nonatomic, copy) NSString *coverUrl;
+@property (nonatomic, copy) NSString *isEncodeSuccess;
 @property (nonatomic,strong) MBProgressHUD *loadingView;
 @property (nonatomic) SEL callBack;
 
@@ -28,6 +37,8 @@
 
 - (void) upLoadVideo: (CDVInvokedUrlCommand *)command;
 
-- (void) getSignWithUrl: (NSString *)s callBack:(SEL)finish;
+- (void) getSignWithUrl:(CDVInvokedUrlCommand *)command;
+
+- (void) getEncodeState: (NSString *)s;
 
 @end
