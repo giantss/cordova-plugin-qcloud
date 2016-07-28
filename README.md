@@ -24,6 +24,17 @@
 				
 
 ##使用方式                								
-					     
+```Javascript
+var path = '需要上传的视频地址';
+   QCloud.upLoadVideo(function(param){
+                        var absoluteSDPath = param.absoluteSDPath;
+                        var cbCoverUrl = param.cbCoverUrl;
+                        console.log('absoluteSDPath',absoluteSDPath);
+                        console.log('cbCoverUrl',cbCoverUrl);
+
+                    },function(msg){
+                        alert(msg);
+                    },{path: path});
+```				     
 
 
