@@ -1,6 +1,8 @@
 #import <Cordova/CDVPlugin.h>
 #import "TXYUploadManager.h"
-#import "MBProgressHUD.h"
+#import "M13ProgressViewRing.h"
+#import "M13ProgressHUD.h"
+
 
 @interface QCloud : CDVPlugin
 
@@ -26,7 +28,8 @@
 @property (nonatomic, copy) NSString *playUrl;
 @property (nonatomic, copy) NSString *coverUrl;
 @property (nonatomic, copy) NSString *isEncodeSuccess;
-@property (nonatomic,strong) MBProgressHUD *loadingView;
+@property (nonatomic,strong) M13ProgressHUD *HUD;
+
 @property (nonatomic) SEL callBack;
 
 

@@ -108,14 +108,14 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
             
             
             
-            [self showLoadingWithView:self.webView];
+         
             //上传视频总共五步之   第五步: 上传任务
             DECLARE_WEAK_SELF;
             [_uploadVideoManager upload:_uploadVideoTask
                                complete:^(TXYTaskRsp *resp, NSDictionary *context) {
                                    DECLARE_STRONG_SELF;
                                    if (!strongSelf) return;
-                                   [self hiddenLoadingWihtView:self.webView];
+                                   //[self hiddenLoadingWihtView:self.webView];
                                    _photoResp = (TXYVideoUploadTaskRsp *)resp;
                                    //                               NSLog(@"上传视频的url%@ 上传视频的fileid = %@",_photoResp.fileURL,_photoResp.fileId);
                                    //                               NSLog(@"video is source url%@",_photoResp.sourceURL);
@@ -154,6 +154,14 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
                                    NSLog(@" totalSize %lld",totalSize);
                                    NSLog(@" sendSize %lld",sendSize);
                                    //NSLog(@" sendSize %@",context);
+                                   
+                                   
+                                  float p =  sendSize / totalSize;
+                                   [_HUD setProgress:p animated:YES];
+
+                                   
+                                   
+                                   
                                }
                             stateChange:^(TXYUploadTaskState state, NSDictionary *context) {
                                 //上传状态变化
@@ -163,6 +171,16 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
                                     break;
                                     case TXYUploadTaskStateConnecting:
                                     NSLog(@"demoapp log 任务连接中");
+                                    
+                                    
+                                    _HUD = [[M13ProgressHUD alloc] initWithProgressView:[[M13ProgressViewRing alloc] init]];
+                                    _HUD.progressViewSize = CGSizeMake(60.0, 60.0);
+                                    _HUD.animationPoint = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+                                    [self.webView addSubview:_HUD];
+                                     [_HUD show:YES];
+                                    _HUD.status = @"视频上传中";
+
+                                    
                                     break;
                                     case TXYUploadTaskStateFail:
                                     NSLog(@"demoapp log 任务失败");
@@ -212,6 +230,7 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
         _isEncodeSuccess = [respEncodeDic objectForKey:@"success"];
         if([self.isEncodeSuccess  isEqual: @"1"]){
             NSLog(@"转码完毕");
+            [_HUD hide:YES];
             _playUrl = [respEncodeDic objectForKey:@"playurl"];
             _coverUrl = [respEncodeDic objectForKey:@"cover_url"];
             //处理地址
@@ -228,8 +247,9 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
             
             
         }else{
-            NSLog(@"转码中");
             
+            NSLog(@"转码中");
+            _HUD.status = @"视频转码中";
             [self performSelector:@selector(getEncodeState:) withObject:_CBURL afterDelay:2];
 
         }
@@ -238,21 +258,4 @@ NSString *QCLOUD_METHED_SUCCESS = @"方法调用失败";
 }
 
 
-
--(void)showLoadingWithView:(UIView *)v
-{
-    
-    //_loadingView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    _loadingView = [MBProgressHUD showHUDAddedTo:self.webView animated:YES];
-    _loadingView.mode = MBProgressHUDModeIndeterminate;
-    
-    //    _loadingView.margin = 10.f;
-    //    _loadingView.yOffset = 150.f;
-    _loadingView.removeFromSuperViewOnHide = YES;
-    [_loadingView show:YES];
-}
--(void)hiddenLoadingWihtView:(UIView *)v
-{
-    [MBProgressHUD hideAllHUDsForView:v animated:YES];
-}
 @end
