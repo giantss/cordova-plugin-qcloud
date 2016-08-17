@@ -31,7 +31,6 @@ var path = '需要上传的视频地址';
                         var cbCoverUrl = param.cbCoverUrl;         //转码过后的标清视频封面地址
                         console.log('absoluteSDPath',absoluteSDPath); 
                         console.log('cbCoverUrl',cbCoverUrl);
-
                     },function(msg){
                         alert(msg);
                     },{path: path});
